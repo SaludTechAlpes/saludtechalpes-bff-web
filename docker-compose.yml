@@ -1,0 +1,11 @@
+services:
+  bff:
+    container_name: bff
+    hostname: bff
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8003:8003"
