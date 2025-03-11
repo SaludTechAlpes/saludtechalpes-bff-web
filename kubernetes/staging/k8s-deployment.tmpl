@@ -24,12 +24,12 @@ spec:
             - name: "MEDICAL_HISTORY_BASE_URL"
               valueFrom:
                 configMapKeyRef:
-                  name: saludtechalpes-bff-configmap
+                  name: bff-configmap
                   key: MEDICAL_HISTORY_BASE_URL
             - name: "BROKER_HOST"
               valueFrom:
                 configMapKeyRef:
-                  name: saludtechalpes-bff-configmap
+                  name: bff-configmap
                   key: BROKER_HOST
           ports:
             - containerPort: 8003
