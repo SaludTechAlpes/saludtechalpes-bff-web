@@ -1,8 +1,12 @@
+from typing import Any
 import uuid
 
 import strawberry
 
+from strawberry.types import Info
+
 from bff_web import utils
+from bff_web.api.v1.contexto import Context
 from bff_web.api.v1.eventos import EventoDatosImportados, EventoDatosImportadosPayload
 from bff_web.config import Config
 from bff_web.despachadores import Despachador
@@ -17,8 +21,13 @@ class Mutation:
 
     @strawberry.mutation
     async def simular_ingesta(
-        self, ruta_imagen: str, ruta_metadatos: str
+        self, ruta_imagen: str, ruta_metadatos: str, info: Info[Context, Any]
     ) -> IngestaRespuesta:
+        if info.context.user is None:
+            return IngestaRespuesta(
+                mensaje="No tienes permisos para realizar esta acción",
+                codigo=401,
+            )
 
         print(f"Ruta Imagen: {ruta_imagen}, Ruta Metadatos: {ruta_metadatos}")
 

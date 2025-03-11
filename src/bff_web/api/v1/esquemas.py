@@ -46,3 +46,7 @@ class Ingesta:
 class IngestaRespuesta:
     mensaje: str
     codigo: int
+
+@strawberry.type
+class Usuario:
+    name: str
