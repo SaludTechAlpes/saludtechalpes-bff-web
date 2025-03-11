@@ -8,7 +8,7 @@ class Despachador:
         ...
 
     async def publicar_mensaje(self, mensaje, topico, schema):
-        host = "host.docker.internal"
+        host = utils.broker_host()
         print(f"Host: {host}")
 
         pulsar_url = f'pulsar://{host}:6650'

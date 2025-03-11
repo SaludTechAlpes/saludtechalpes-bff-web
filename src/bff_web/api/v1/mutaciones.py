@@ -3,7 +3,7 @@ import uuid
 import strawberry
 
 from bff_web import utils
-from bff_web.api.v1.eventos import EventoIngesta, EventoIngestaPayload
+from bff_web.api.v1.eventos import EventoDatosImportados, EventoDatosImportadosPayload
 from bff_web.config import Config
 from bff_web.despachadores import Despachador
 
@@ -22,12 +22,17 @@ class Mutation:
 
         print(f"Ruta Imagen: {ruta_imagen}, Ruta Metadatos: {ruta_metadatos}")
 
-        payload = EventoIngestaPayload(
+        payload = EventoDatosImportadosPayload(
             ruta_imagen=ruta_imagen,
             ruta_metadatos=ruta_metadatos,
         )
+        payload = EventoDatosImportadosPayload(
+            ruta_imagen_importada=ruta_imagen,
+            ruta_metadatos_importados=ruta_metadatos,
+            evento_a_fallar=None,
+        )
 
-        evento = EventoIngesta(
+        evento = EventoDatosImportados(
             id=str(uuid.uuid4()),
             time=utils.time_millis(),
             specversion="v1",
@@ -40,6 +45,8 @@ class Mutation:
 
         despachador = Despachador()
 
-        await despachador.publicar_mensaje(evento, "datos-importados", EventoIngesta)
+        await despachador.publicar_mensaje(
+            evento, "datos-importados", EventoDatosImportados
+        )
 
         return IngestaRespuesta(mensaje="Procesando Mensaje", codigo=203)
