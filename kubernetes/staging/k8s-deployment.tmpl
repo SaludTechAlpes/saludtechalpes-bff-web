@@ -1,0 +1,57 @@
+###################################
+# saludtechalpes-saludtechalpes-bff-service
+###################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saludtechalpes-bff
+  labels:
+    app: saludtechalpes-bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saludtechalpes-bff
+  template:
+    metadata:
+      labels:
+        app: saludtechalpes-bff
+    spec:
+      containers:
+        - name: saludtechalpes-bff
+          image: us-east1-docker.pkg.dev/saludtechalpes/saludtechalpes/saludtechalpes-bff:{{IMAGE_TAG}}
+          env:
+            - name: "MEDICAL_HISTORY_BASE_URL"
+              valueFrom:
+                configMapKeyRef:
+                  name: saludtechalpes-bff-configmap
+                  key: MEDICAL_HISTORY_BASE_URL
+            - name: "BROKER_HOST"
+              valueFrom:
+                configMapKeyRef:
+                  name: saludtechalpes-bff-configmap
+                  key: BROKER_HOST
+          ports:
+            - containerPort: 8003
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "1024m"
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: saludtechalpes-bff-network
+spec:
+  type: LoadBalancer
+  selector:
+    app: saludtechalpes-bff
+  ports:
+    - protocol: TCP
+      port: 8003
+      targetPort: 8003
